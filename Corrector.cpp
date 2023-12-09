@@ -175,7 +175,18 @@ void	Diccionario			(char *szNombre, char szPalabras[][TAMTOKEN], int iEstadistic
 	printf("\nElementos: %i", iNumPalabras);
 
 	/***********************************************************************************/
-	
+	/*Pasar la informacion de palabras y estaditisca a las cadenas finales*/
+	for (i = 0; i < iNumPalabras; i++)
+	{
+		strcpy_s(szPalabras[i], TAMTOKEN, palabras[i]);
+		iEstadisticas[i] = estadistica[i];
+
+	}
+	iNumElementos = iNumPalabras;;
+	for (i = 0; i < iNumElementos; i++) {
+		printf("\n ppp: %s %i", szPalabras[i], iEstadisticas[i]);
+	}
+	printf("\nElementos dicc: %i", iNumElementos);
 	
 	fclose(fpDicc);
 	}
