@@ -6,7 +6,10 @@
 	(c) Ponga su nombre y numero de cuenta aqui.
 	
 	Quiso decir: Programa principal de la aplicacion de la distancia de Levenstein.
+	
 ******************************************************************************************************************/
+
+
 #include "stdafx.h"
 #include <string.h>
 #include "corrector.h"
@@ -82,7 +85,6 @@ void	Diccionario			(char *szNombre, char szPalabras[][TAMTOKEN], int iEstadistic
 	fraselimpia2[n] = '\0';
 	printf("\n%s\n", fraselimpia2);
 	/*********************************************************************/
-	/* Identificar palabras e irlas guardando en la cadena palabras*/
 	iLongCadena = strlen(fraselimpia2);
 	if(fraselimpia2[0] == blanco)
 	{	iNumPalabras = 0; }
@@ -126,6 +128,61 @@ void	Diccionario			(char *szNombre, char szPalabras[][TAMTOKEN], int iEstadistic
 
 	//printf("\ntotal palabras: %i\n", iNumPalabras);
 	/**********************************************************************************/
+	/*Acomodar las palabras por abecedario*/
+	for (i = 0; i < iNumPalabras - 1; i++)
+	{
+		for (posicion = 0; posicion < iNumPalabras - 1; posicion++)
+		{
+			if ((strcmp(palabras[posicion], palabras[posicion + 1])) == 1)
+			{
+				//cambio de posicion
+				strcpy_s(prov[0], TAMTOKEN, palabras[posicion]);
+				strcpy_s(palabras[posicion], TAMTOKEN, palabras[posicion + 1]);
+				strcpy_s(palabras[posicion + 1], TAMTOKEN, prov[0]);
+
+			}
+		}
+	}
+	for (i = 0; i < iNumPalabras; i++) {
+		//printf("\n pp: %s", palabras[i]);
+	}
+	/*************************************************************************************/
+		//palabras repetidas
+	for (i = 0; i < iNumPalabras - 1; i++) 
+	{
+		for (h = i + 1; h < iNumPalabras;) 
+		{
+			if (strcmp(palabras[i], palabras[h]) == 0) 
+			{
+				estadistica[i] = estadistica[i] + 1;
+				// Eliminar elemento duplicado
+				for (b = h; b < iNumPalabras - 1; b++)
+				{
+					strcpy_s(palabras[b], TAMTOKEN, palabras[b + 1]);
+
+				}
+				(iNumPalabras)--;
+
+			}
+			else {
+				h++;
+			}
+		}
+	}
+	for (i = 0; i < iNumPalabras; i++) {
+		printf("\n pp: %s %i", palabras[i],estadistica[i]);
+	}
+	printf("\nElementos: %i", iNumPalabras);
+
+	/***********************************************************************************/
+	
+	
+	fclose(fpDicc);
+	}
+	else
+	{
+		if (DEPURAR == 1)
+			printf("\nNo lo pude abrir");
 	}
 }
 
@@ -151,7 +208,7 @@ void	ListaCandidatas		(
 	int		iPeso[],							//Peso de las palabras en la lista final
 	int &	iNumLista)							//Numero de elementos en la szListaFinal
 {
- 
+
 	//Sustituya estas lineas por su código
 	strcpy(szListaFinal[0], szPalabrasSugeridas[ 0] ); //la palabra candidata
 	iPeso[0] = iEstadisticas[0];			// el peso de la palabra candidata
