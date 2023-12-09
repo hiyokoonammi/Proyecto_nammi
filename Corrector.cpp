@@ -6,7 +6,6 @@
 	(c) Ponga su nombre y numero de cuenta aqui.
 	
 	Quiso decir: Programa principal de la aplicacion de la distancia de Levenstein.
-	
 ******************************************************************************************************************/
 #include "stdafx.h"
 #include <string.h>
@@ -82,51 +81,7 @@ void	Diccionario			(char *szNombre, char szPalabras[][TAMTOKEN], int iEstadistic
 	}
 	fraselimpia2[n] = '\0';
 	printf("\n%s\n", fraselimpia2);
-	/*********************************************************************/
-	/* Identificar palabras e irlas guardando en la cadena palabras*/
-	iLongCadena = strlen(fraselimpia2);
-	if(fraselimpia2[0] == blanco)
-	{	iNumPalabras = 0; }
-	else 	{		iNumPalabras = 1;	}
-	iContador = 0;
-	i = 0;
-	b = 0;
-	while(fraselimpia2[iContador] != '\0')
-	{
-		if(fraselimpia2[iContador] == blanco || fraselimpia2[iContador] == '\0')
-		{
-			iContador++;
-			if (fraselimpia2[iContador] != '\0' && fraselimpia2[iContador] != blanco)
-			{
-				palabra[i] = '\0';
-				strcpy_s(palabras[b], 50, palabra);
-				estadistica[b] = 1;
-			//	printf("\np: %s", palabras[b]);
-			//	printf("\tp: %i", estadistica[b]);
-				b++;
-				i = 0;
-				for (h = 0; h < strlen(palabra); h++)
-				{
-					palabra[h] = ' ';
-				}
-				iNumPalabras++;
-			}
-		}
-		else
-		{
-			palabra[i] = fraselimpia2[iContador];
-			iContador++;
-			i++;
-		}
-	}
-	palabra[i] = '\0';
-	strcpy_s(palabras[b], 50, palabra);
-	estadistica[b] = 1;
-	//printf("\n p: %s", palabras[b]);
-	//printf("\tp: %i", estadistica[b]);
 
-	//printf("\ntotal palabras: %i\n", iNumPalabras);
-	/**********************************************************************************/
 	}
 }
 
