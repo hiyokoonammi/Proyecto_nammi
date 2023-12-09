@@ -156,7 +156,6 @@ void	Diccionario			(char *szNombre, char szPalabras[][TAMTOKEN], int iEstadistic
 	//printf("\nElementos: %i", iNumPalabras);
 	
 	/*************************************************************************************/
-	//posición
 	for (i = 0; i < iNumPalabras - 1; i++)
 	{
 		for (posicion = 0; posicion < iNumPalabras - 1; posicion++)
@@ -185,10 +184,10 @@ void	Diccionario			(char *szNombre, char szPalabras[][TAMTOKEN], int iEstadistic
 
 	}
 	iNumElementos = iNumPalabras + 1;;
-	for (i = 0; i < iNumElementos; i++) {
+	/*for (i = 0; i < iNumElementos; i++) {
 	//	printf("\n ppp: %s %i", szPalabras[i], iEstadisticas[i]);
 	}
-//	printf("\nElementos dicc: %i", iNumElementos);
+	//	printf("\nElementos dicc: %i", iNumElementos);*/
 	
 	fclose(fpDicc);
 	}
@@ -221,11 +220,15 @@ void	ListaCandidatas		(
 	int &	iNumLista)							//Numero de elementos en la szListaFinal
 {
 
-	//Sustituya estas lineas por su código
-	strcpy(szListaFinal[0], szPalabrasSugeridas[ 0] ); //la palabra candidata
+
+
+	/*/Sustituya estas lineas por su código
+	strcpy_s(szListaFinal[0], szPalabrasSugeridas[ 0] ); //la palabra candidata
 	iPeso[0] = iEstadisticas[0];			// el peso de la palabra candidata
 	
-	iNumLista = 1;							//Una sola palabra candidata
+	iNumLista = 1;							//Una sola palabra candidata*/
+
+
 }
 
 /*****************************************************************************************************************
@@ -239,7 +242,37 @@ void	ClonaPalabras(
 	char	szPalabrasSugeridas[][TAMTOKEN], 	//Lista de palabras clonadas
 	int &	iNumSugeridas)						//Numero de elementos en la lista
 {
-	//Sustituya estas lineas por su código
+	char sug[70000][TAMTOKEN];
+	int i, b, k;
+	int longi;
+	char abc[31] = { 'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','á', 'é', 'í', 'ó', 'ú'};
+	char prov;
+
+	strcpy_s(sug[0], TAMTOKEN, szPalabraLeida);
+	longi = strlen(szPalabraLeida);
+
+	for (i = 0; i < longi; i++) //elima caracteres
+	{
+		strcpy_s(szPalabraLeida, TAMTOKEN, sug[0]);
+		for (b = i; b < longi; b++)
+		{
+			szPalabraLeida[b] = szPalabraLeida[b+1];
+		}
+		strcpy_s(sug[i + 1], TAMTOKEN, szPalabraLeida);
+	}
+	// Transponer pares de caracteres y almacenar las nuevas sugerencias
+	for (i = 0; i < longi; i++)
+	{
+		strcpy_s(szPalabraLeida, TAMTOKEN, sug[0]);
+
+			prov = szPalabraLeida[i];
+			szPalabraLeida[i] = szPalabraLeida[i + 1];
+			szPalabraLeida[i + 1] = prov;
+	
+		strcpy_s(sug[longi + i + 1], TAMTOKEN, szPalabraLeida);
+	}
+
+	/*/Sustituya estas lineas por su código
 	strcpy(szPalabrasSugeridas[0], szPalabraLeida); //lo que sea que se capture, es sugerencia
-	iNumSugeridas = 1;							//Una sola palabra sugerida
+	iNumSugeridas = 1;							//Una sola palabra sugerida*/
 }
