@@ -8,13 +8,10 @@
 	Quiso decir: Programa principal de la aplicacion de la distancia de Levenstein.
 	
 ******************************************************************************************************************/
-
-
 #include "stdafx.h"
 #include <string.h>
 #include "corrector.h"
 #define DEPURAR 0
-
 //Funciones publicas del proyecto
 /*****************************************************************************************************************
 	DICCIONARIO: Esta funcion crea el diccionario completo
@@ -26,13 +23,12 @@
 void	Diccionario			(char *szNombre, char szPalabras[][TAMTOKEN], int iEstadisticas[], int &iNumElementos)
 {
 	FILE* fpDicc;
-	char linea[900000];
+	char linea[999999];
 	char palabra[TAMTOKEN];
-	char fraselimpia[900000];
-	char fraselimpia2[900000];
-	int i,n, b, h, posicion;
+	char fraselimpia[999999];
+	int i,n, b, h, posicion,longi;
 	char blanco = ' ';
-	int iContador, iLongCadena, iNumPalabras, prov2;
+	int iContador, iNumPalabras, prov2;
 	int estadistica[NUMPALABRAS];
 	char palabras[NUMPALABRAS][TAMTOKEN];
 	char prov[2][TAMTOKEN];
@@ -51,143 +47,139 @@ void	Diccionario			(char *szNombre, char szPalabras[][TAMTOKEN], int iEstadistic
 		while (!feof(fpDicc))
 		{
 			fgets(linea, sizeof(linea), fpDicc);
-			_strlwr(linea);
+			_strlwr_s(linea);
+			longi = strlen(linea);
 			if (DEPURAR == 1) {
-				printf("\nFrase con caracteres esp: %s\n", linea);}
-			for (i = 0; i < strlen(linea); i++)
-			{
-				//quitar caracteres especiales, dejar solo punto para los punto y aparte
-				if(!(linea[i] == '\t' || linea[i] == '\n' || linea[i] == ',' || linea[i] == ';' || linea[i] == '(' || linea[i] == ')' || linea[i] == '13'))
-				{ 
-					//printf("%c", linea[i]);
-					fraselimpia[n] = linea[i];
-					n++;
-				//	printf("%c", fraselimpia[n]);
+				//printf("\nFrase con caracteres esp: %s\n", linea);
 				}
-			}
-			fraselimpia[n] = '\0';
-			printf("\nFrase sin caracteres final: %s\n", fraselimpia);
+				for (i = 0; i<longi ; i++)
+				{
+					//quitar caracteres especiales, dejar solo punto para los punto y aparte
+					if (!(linea[i] == '\t' || linea[i] == ',' || linea[i] == ';' || linea[i] == '(' || linea[i] == ')' || linea[i] == '13' || linea[i] == ':' || linea[i] == '\'' || linea[i] == '-' || linea[i] == '&'))
+					{
+						//printf("%c", linea[i]);
+						if (linea[i] == '.' || linea[i] == '\n')
+						{
+							fraselimpia[n] = ' ';
+							n++;
+						}
+						else
+						{
+							fraselimpia[n] = linea[i];
+							n++;
+							//	printf("%c", fraselimpia[n]);
+						}
+					}
+				}
+				fraselimpia[n] = '\0';
+				//	printf("\nFrase sin caracteres final: %s\n", fraselimpia);
 		}
-	n = 0;
-	for(i = 0; i < strlen(fraselimpia); i++)
-	{
-		if (fraselimpia[i] == '.')
-		{
-			fraselimpia2[n] = ' ';
-			n++;
-		}
-		else 
-		{
-			fraselimpia2[n] = fraselimpia[i];
-			n++;
-		}
-	}
-	fraselimpia2[n] = '\0';
-	printf("\n%s\n", fraselimpia2);
-	/*********************************************************************/
-	iLongCadena = strlen(fraselimpia2);
-	if(fraselimpia2[0] == blanco)
-	{	iNumPalabras = 0; }
-	else 	{		iNumPalabras = 1;	}
-	iContador = 0;
-	i = 0;
-	b = 0;
-	while(fraselimpia2[iContador] != '\0')
-	{
-		if(fraselimpia2[iContador] == blanco || fraselimpia2[iContador] == '\0')
-		{
-			iContador++;
-			if (fraselimpia2[iContador] != '\0' && fraselimpia2[iContador] != blanco)
-			{
-				palabra[i] = '\0';
-				strcpy_s(palabras[b], 50, palabra);
-				estadistica[b] = 1;
-			//	printf("\np: %s", palabras[b]);
-			//	printf("\tp: %i", estadistica[b]);
-				b++;
+		fclose(fpDicc);
+				/*********************************************************************/
+			/*	if (fraselimpia[0] == blanco)
+				{
+					iNumPalabras = 0;
+				}
+				else { iNumPalabras = 1; }*/
+				iNumPalabras = 1;
+				iContador = 0;
 				i = 0;
-				for (h = 0; h < strlen(palabra); h++)
+				b = 0;
+				while (fraselimpia[iContador] != '\0')
 				{
-					palabra[h] = ' ';
+					if (fraselimpia[iContador] == blanco)
+					{
+						iContador++;
+						if (fraselimpia[iContador] != '\0' && fraselimpia[iContador] != blanco)
+						{
+							palabra[i] = '\0';
+							strcpy_s(palabras[b], TAMTOKEN, palabra);
+							estadistica[b] = 1;
+							//	printf("\np: %s", palabras[b]);
+							//	printf("\tp: %i", estadistica[b]);
+							b++;
+							i = 0;
+							//for (h = 0; h < (strlen(palabra)); h++)
+							//{
+							//	palabra[h] = ' ';
+							//}
+							palabra[0] = '\0';
+							iNumPalabras++;
+						}
+					}
+					else
+					{
+						palabra[i] = fraselimpia[iContador];
+						iContador++;
+						i++;
+					}
 				}
-				iNumPalabras++;
-			}
-		}
-		else
-		{
-			palabra[i] = fraselimpia2[iContador];
-			iContador++;
-			i++;
-		}
-	}
-	palabra[i] = '\0';
-	strcpy_s(palabras[b], 50, palabra);
-	estadistica[b] = 1;
-	//printf("\n p: %s", palabras[b]);
-	//printf("\tp: %i", estadistica[b]);
-	//printf("\ntotal palabras: %i\n", iNumPalabras);
-	/**********************************************************************************/
-	//palabras repetidas
-	for (i = 0; i < iNumPalabras - 1; i++)
-	{
-		for (h = i + 1; h < iNumPalabras;)
-		{
-			if (strcmp(palabras[i], palabras[h]) == 0)
-			{
-				estadistica[i] = estadistica[i] + 1;
-				// Eliminar elemento duplicado
-				for (b = h; b < iNumPalabras - 1; b++)
+				palabra[i] = '\0';
+				strcpy_s(palabras[b], TAMTOKEN, palabra);
+				estadistica[b] = 1;
+			//	printf("\n p: %s", palabras[b]);
+			//	printf("\tp: %i", estadistica[b]);
+			//	printf("\ntotal palabras: %i\n", iNumPalabras);
+				/**********************************************************************************/
+				//palabras repetidas
+				for (i = 0; i < iNumPalabras - 1; i++)
 				{
-					strcpy_s(palabras[b], TAMTOKEN, palabras[b + 1]);
+					for (h = i + 1; h < iNumPalabras;)
+					{
+						if (strcmp(palabras[i], palabras[h]) == 0)
+						{
+							estadistica[i] = estadistica[i] + 1;
+							// Eliminar elemento duplicado
+							for (b = h; b < iNumPalabras-1; b++)
+							{
+								strcpy_s(palabras[b], TAMTOKEN, palabras[b + 1]);
+
+							}
+							(iNumPalabras)--;
+
+						}
+						else {
+							h++;
+						}
+					}
+				}
+				/*for (i = 0; i < iNumPalabras; i++) {
+					printf("\n pp: %s %i", palabras[i], estadistica[i]);
+				}
+				printf("\nElementos: %i", iNumPalabras);*/
+				/*************************************************************************************/
+				for (i = 0; i < iNumPalabras - 1; i++)
+				{
+					for (posicion = 0; posicion < iNumPalabras - 1; posicion++)
+					{
+						if ((strcmp(palabras[posicion], palabras[posicion + 1])) == 1)
+						{
+							//cambio de posicion
+							strcpy_s(prov[0], TAMTOKEN, palabras[posicion]);
+							strcpy_s(palabras[posicion], TAMTOKEN, palabras[posicion + 1]);
+							strcpy_s(palabras[posicion + 1], TAMTOKEN, prov[0]);
+
+							prov2 = estadistica[posicion];
+							estadistica[posicion] = estadistica[posicion + 1];
+							estadistica[posicion + 1] = prov2;
+						}
+					}
+				}
+				/*for (i = 0; i < iNumPalabras; i++) {
+					//printf("\n pp: %s", palabras[i]);
+				}*/
+				/***********************************************************************************/
+				for (i = 0; i < iNumPalabras; i++)
+				{
+					strcpy_s(szPalabras[i], TAMTOKEN, palabras[i]);
+					iEstadisticas[i] = estadistica[i];
 
 				}
-				(iNumPalabras)--;
-
-			}
-			else {
-				h++;
-			}
-		}
-	}
-	/*for (i = 0; i < iNumPalabras; i++) {
-		printf("\n pp: %s %i", palabras[i], estadistica[i]);
-	}
-	printf("\nElementos: %i", iNumPalabras);*/
-	/*************************************************************************************/
-	for (i = 0; i < iNumPalabras - 1; i++)
-	{
-		for (posicion = 0; posicion < iNumPalabras - 1; posicion++)
-		{
-			if ((strcmp(palabras[posicion], palabras[posicion + 1])) == 1)
-			{
-				//cambio de posicion
-				strcpy_s(prov[0], TAMTOKEN, palabras[posicion]);
-				strcpy_s(palabras[posicion], TAMTOKEN, palabras[posicion + 1]);
-				strcpy_s(palabras[posicion + 1], TAMTOKEN, prov[0]);
-
-				prov2 = estadistica[posicion];
-				estadistica[posicion] = estadistica[posicion + 1];
-				estadistica[posicion + 1] = prov2;
-			}
-		}
-	}
-	/*for (i = 0; i < iNumPalabras; i++) {
-		//printf("\n pp: %s", palabras[i]);
-	}*/
-	/***********************************************************************************/
-	for (i = 0; i < iNumPalabras; i++)
-	{
-		strcpy_s(szPalabras[i], TAMTOKEN, palabras[i]);
-		iEstadisticas[i] = estadistica[i];
-
-	}
-	iNumElementos = iNumPalabras;
-	/*for (i = 0; i < iNumElementos; i++) {
-	//	printf("\n ppp: %s %i", szPalabras[i], iEstadisticas[i]);
-	}
-	//	printf("\nElementos dicc: %i", iNumElementos);*/
-	
-	fclose(fpDicc);
+				iNumElementos = iNumPalabras;
+				/*for (i = 0; i < iNumElementos; i++) {
+				//	printf("\n ppp: %s %i", szPalabras[i], iEstadisticas[i]);
+				}
+				//	printf("\nElementos dicc: %i", iNumElementos);*/
 	}
 	else
 	{
@@ -218,7 +210,7 @@ void	ListaCandidatas		(
 	int &	iNumLista)							//Numero de elementos en la szListaFinal
 {
 	int i, b,k;
-	char list[3300][TAMTOKEN], prov2[2][TAMTOKEN];
+	char list[330000][TAMTOKEN], prov2[2][TAMTOKEN];
 	int peso[3300];
 	int total, prov, posicion;
 
@@ -291,12 +283,14 @@ void	ListaCandidatas		(
 void	ClonaPalabras(
 	char *	szPalabraLeida,						// Palabra a clonar
 	char	szPalabrasSugeridas[][TAMTOKEN], 	//Lista de palabras clonadas
-	int &	iNumSugeridas)						//Numero de elementos en la lista
+	int    &iNumSugeridas)						//Numero de elementos en la lista
 {
-	char sug[95000][TAMTOKEN];
-	int i, b, k;
+	char sug[999999][TAMTOKEN];
+	int i;
+	int b;
+	int k;
 	int longi;
-	char abc[32] = { 'a','b','c','d','e','f','g','h','i','j','k','l','m','n',164,'o','p','q','r','s','t','u','v','w','x','y','z',160, 130, 161 , 162, 163};
+	char abc[32] = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','ñ','o','p','q','r','s','t','u','v','w','x','y','z','á', 'é', 'í', 'ó','ú'};
 	char prov;
 	int posicion;
 	char prov2[2][TAMTOKEN];
