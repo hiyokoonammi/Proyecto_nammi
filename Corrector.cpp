@@ -32,7 +32,7 @@ void	Diccionario			(char *szNombre, char szPalabras[][TAMTOKEN], int iEstadistic
 	char fraselimpia2[800000];
 	int i,n, b, h, posicion;
 	char blanco = ' ';
-	int iContador, iLongCadena, iNumPalabras;
+	int iContador, iLongCadena, iNumPalabras, prov2;
 	int estadistica[NUMPALABRAS];
 	char palabras[NUMPALABRAS][TAMTOKEN];
 	char prov[2][TAMTOKEN];
@@ -83,7 +83,7 @@ void	Diccionario			(char *szNombre, char szPalabras[][TAMTOKEN], int iEstadistic
 		}
 	}
 	fraselimpia2[n] = '\0';
-	printf("\n%s\n", fraselimpia2);
+//	printf("\n%s\n", fraselimpia2);
 	/*********************************************************************/
 	iLongCadena = strlen(fraselimpia2);
 	if(fraselimpia2[0] == blanco)
@@ -128,31 +128,12 @@ void	Diccionario			(char *szNombre, char szPalabras[][TAMTOKEN], int iEstadistic
 
 	//printf("\ntotal palabras: %i\n", iNumPalabras);
 	/**********************************************************************************/
-	/*Acomodar las palabras por abecedario*/
+			//palabras repetidas
 	for (i = 0; i < iNumPalabras - 1; i++)
 	{
-		for (posicion = 0; posicion < iNumPalabras - 1; posicion++)
+		for (h = i + 1; h < iNumPalabras;)
 		{
-			if ((strcmp(palabras[posicion], palabras[posicion + 1])) == 1)
-			{
-				//cambio de posicion
-				strcpy_s(prov[0], TAMTOKEN, palabras[posicion]);
-				strcpy_s(palabras[posicion], TAMTOKEN, palabras[posicion + 1]);
-				strcpy_s(palabras[posicion + 1], TAMTOKEN, prov[0]);
-
-			}
-		}
-	}
-	for (i = 0; i < iNumPalabras; i++) {
-		//printf("\n pp: %s", palabras[i]);
-	}
-	/*************************************************************************************/
-		//palabras repetidas
-	for (i = 0; i < iNumPalabras - 1; i++) 
-	{
-		for (h = i + 1; h < iNumPalabras;) 
-		{
-			if (strcmp(palabras[i], palabras[h]) == 0) 
+			if (strcmp(palabras[i], palabras[h]) == 0)
 			{
 				estadistica[i] = estadistica[i] + 1;
 				// Eliminar elemento duplicado
@@ -170,23 +151,44 @@ void	Diccionario			(char *szNombre, char szPalabras[][TAMTOKEN], int iEstadistic
 		}
 	}
 	for (i = 0; i < iNumPalabras; i++) {
-		printf("\n pp: %s %i", palabras[i],estadistica[i]);
+		//printf("\n pp: %s %i", palabras[i], estadistica[i]);
 	}
-	printf("\nElementos: %i", iNumPalabras);
+	//printf("\nElementos: %i", iNumPalabras);
+	
+	/*************************************************************************************/
+	//posición
+	for (i = 0; i < iNumPalabras - 1; i++)
+	{
+		for (posicion = 0; posicion < iNumPalabras - 1; posicion++)
+		{
+			if ((strcmp(palabras[posicion], palabras[posicion + 1])) == 1)
+			{
+				//cambio de posicion
+				strcpy_s(prov[0], TAMTOKEN, palabras[posicion]);
+				strcpy_s(palabras[posicion], TAMTOKEN, palabras[posicion + 1]);
+				strcpy_s(palabras[posicion + 1], TAMTOKEN, prov[0]);
 
+				prov2 = estadistica[posicion];
+				estadistica[posicion] = estadistica[posicion + 1];
+				estadistica[posicion + 1] = prov2;
+			}
+		}
+	}
+	for (i = 0; i < iNumPalabras; i++) {
+		//printf("\n pp: %s", palabras[i]);
+	}
 	/***********************************************************************************/
-	/*Pasar la informacion de palabras y estaditisca a las cadenas finales*/
 	for (i = 0; i < iNumPalabras; i++)
 	{
 		strcpy_s(szPalabras[i], TAMTOKEN, palabras[i]);
 		iEstadisticas[i] = estadistica[i];
 
 	}
-	iNumElementos = iNumPalabras;;
+	iNumElementos = iNumPalabras + 1;;
 	for (i = 0; i < iNumElementos; i++) {
-		printf("\n ppp: %s %i", szPalabras[i], iEstadisticas[i]);
+	//	printf("\n ppp: %s %i", szPalabras[i], iEstadisticas[i]);
 	}
-	printf("\nElementos dicc: %i", iNumElementos);
+//	printf("\nElementos dicc: %i", iNumElementos);
 	
 	fclose(fpDicc);
 	}
@@ -196,7 +198,6 @@ void	Diccionario			(char *szNombre, char szPalabras[][TAMTOKEN], int iEstadistic
 			printf("\nNo lo pude abrir");
 	}
 }
-
 /*****************************************************************************************************************
 	ListaCandidatas: Esta funcion recupera desde el diccionario las palabras validas y su peso
 	Regresa las palabras ordenadas por su peso
