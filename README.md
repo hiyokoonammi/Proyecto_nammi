@@ -1,3 +1,4 @@
 # Proyecto_nammi
-Proyecto que simula un "quiso decir" de un teclado.
-Nombre
+Nombre del proyecto: Corrector.cpp
+Grupo: 1108
+Alumna: Alejandra Muciño
